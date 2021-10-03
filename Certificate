@@ -1,3 +1,7 @@
 ## Submit a CSR with Powershell use PKI Template
 
 Submit-CertificateRequest -path C:\Temp\request.csr -CertificationAuthority (Get-CertificationAuthority caserver02.domain.local) -Attribute CertificateTemplate:WebServer
+
+## Get all CAs
+
+Get-CertificationAuthority
