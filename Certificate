@@ -1,6 +1,19 @@
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Install-PackageProvider -Name "NuGet"
+Install-Package PSPKI -Source C:\temp
+Install-Module -Name PSPKI
+Import-Module PSPKI
+https://www.powershellgallery.com/packages/PSPKI/3.7.2
+
 ## Submit a CSR with Powershell use PKI Template
 
 Submit-CertificateRequest -path C:\Temp\request.csr -CertificationAuthority (Get-CertificationAuthority caserver02.domain.local) -Attribute CertificateTemplate:WebServer
+
+##
+export
+##
+
+Get-IssuedRequest -CertificationAuthority ws01 -RequestID 9 | Receive-Certificate -path c:\temp\export
 
 ## Get all CAs
 
