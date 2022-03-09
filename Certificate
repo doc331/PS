@@ -1,3 +1,11 @@
+### - CMD - ###
+
+certreq.exe -attrib "CertificateTemplate:Web-Server" c:\temp\pki\request.csr c:\temp\pki\outfile.cer && Get-Content C:\temp\pki\outfile.cer
+Get-Content C:\temp\pki\outfile.cer
+
+### - POWERSHELL - ###
+
+
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Install-PackageProvider -Name "NuGet"
 Install-Package PSPKI -Source C:\temp
