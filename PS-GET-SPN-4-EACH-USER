@@ -1,0 +1,7 @@
+### GET SPN FROM EACH USER ###
+
+$users = (get-aduser -filter *).Name
+foreach ($user in $users) {
+Get-ADUser $user | select Name,ServicePrincipalNames -ExpandProperty ServicePrincipalNames
+} 
+
