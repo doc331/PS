@@ -1,0 +1,14 @@
+$identity = New-Object System.Security.Principal.NTAccount('NT AUTHORITY\SYSTEM')
+$acl = New-Object System.Security.AccessControl.DirectorySecurity
+$acl.SetOwner($identity)
+$acl.SetGroup($identity)
+$rule = New-Object System.Security.AccessControl.FileSystemAccessRule('NT-AUTORITÄT\SYSTEM', ’FullControl’, ’ContainerInherit, ObjectInherit’, ’None’,’Allow’)
+$acl.AddAccessRule($rule)
+$rule = New-Object System.Security.AccessControl.FileSystemAccessRule('VORDEFINIERT\Administratoren', ’FullControl’, ’ContainerInherit, ObjectInherit’, ’None’, ’Allow’)
+$acl.AddAccessRule($rule)
+$rule = New-Object System.Security.AccessControl.FileSystemAccessRule('VORDEFINIERT\Benutzer', ’FullControl’, ’ContainerInherit, ObjectInherit’, ’None’, ’Allow’)
+$acl.AddAccessRule($rule)
+Set-Acl -LiteralPath "c:\sysmon" -AclObject $acl
+Get-Acl -LiteralPath "c:\sysmon" | Format-List
+
+remove-item c:\sysmon -R
