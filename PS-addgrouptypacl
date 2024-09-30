@@ -1,0 +1,48 @@
+Import-Module ActiveDirectory
+
+# BSP -- addgrouptypacl "DOM\AG-02" "OU=SG-T2,OU=C-Tier,DC=dom,DC=de"
+
+Function addgrouptypacl([string]$ADGROUP, [string]$adObjectDN)
+{
+
+# VAR for AD Group"
+#$ADGROUP = "DOM\AG-02"
+
+# VAR for DistinguishedName of the AD Object"
+#$adObjectDN = "OU=SG-T2,OU=C-Tier,DC=dom,DC=de"  
+
+# Define the parameters for the ACE
+$activeDirectoryRights = [System.DirectoryServices.ActiveDirectoryRights]::"ReadProperty","WriteProperty"
+#$inheritanceType = [System.DirectoryServices.InheritanceFlags]::ContainerInherit
+#$propagationFlags = [System.DirectoryServices.PropagationFlags]::InheritOnly
+$identityReference = New-Object System.Security.Principal.NTAccount($ADGROUP)
+$objectType = [Guid]::Parse("bf9679c0-0de6-11d0-a285-00aa003049e2")
+$inheritedObjectType = [Guid]::Parse("bf967a9c-0de6-11d0-a285-00aa003049e2")
+$accessControlType = [System.Security.AccessControl.AccessControlType]::Allow
+$inheritanceScope = "Descendents"
+
+
+# Create the ACE
+$ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule(
+    $identityReference,
+    $activeDirectoryRights,
+    $accessControlType,
+    $objectType,
+    $inheritanceScope,
+    $inheritedObjectType
+)
+
+$adObjectDNP = $("AD:\" + $adObjectDN)
+# Get the ACL and add the ACE
+$acldefinition = Get-Acl $adObjectDNP
+$acldefinition.AddAccessRule($ace)
+$acldefinition | Set-Acl $adObjectDNP
+
+
+Write-Host "GROUPMEMBER ACE apply for the Object " -ForegroundColor Cyan -NoNewline; 
+Write-Host "'$adObjectDN' " -ForegroundColor Green -NoNewline;
+Write-Host "and " -ForegroundColor Cyan -NoNewline;
+Write-Host "'$ADGROUP' " -ForegroundColor Green -NoNewline;
+Write-Host "added!" -ForegroundColor Cyan -NoNewline;
+
+}
